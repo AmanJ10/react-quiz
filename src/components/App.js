@@ -29,7 +29,7 @@ function reducer(state, action) {
   // state is current state which is an object
   switch (action.type) {
     case "dataReceived":
-      return { ...state, questions: action.payload, status: "ready" }; // here payload is the questions array
+      return { ...state, questions: action.payload.questions, status: "ready" }; // here payload is the questions array
 
     case "dataFailed":
       return { ...state, status: "error" };
@@ -98,12 +98,15 @@ export default function App() {
     (prev, curr) => prev + curr.points,
     0
   );
+  console.log(questions);
 
   useEffect(function () {
     // fetch("http://localhost:8000/questions")
     fetch("/questions.json")
       .then((res) => res.json())
-      .then((data) => dispatch({ type: "dataReceived", payload: data }))
+      .then((data) => {
+        dispatch({ type: "dataReceived", payload: data });
+      })
       .catch((err) => dispatch({ type: "dataFailed" }));
   }, []);
 
